@@ -1,11 +1,9 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
 
 const User = require("../models/user-model");
 const { getUserByEmailPromise } = require("../utils/getUser");
-
-const jwtTokenSecret = process.env.JWTSECRET
+const { generateToken } = require("../jwt/jwt");
 
 createUser = (req, res) => {
   //check for errors before creating user
@@ -38,10 +36,11 @@ createUser = (req, res) => {
     user
       .save()
       .then(() => {
+        const userId = user._id;
+        const jwtToken = generateToken(userId);
         return res.status(201).json({
           success: true,
-          id: user._id,
-          message: "User created!",
+          token: jwtToken,
         });
       })
       .catch((error) => {
@@ -54,37 +53,38 @@ createUser = (req, res) => {
 };
 
 loginUser = (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
-  const invalidCredentials = "Email or password is invalid"
+  const email = req.body.email;
+  const password = req.body.password;
+  const invalidCredentials = "Email or password is invalid";
 
-  getUserByEmailPromise(email).then((user) => {
-    bcrypt.compare(password, user.password).then((matches) => {
-      if (!matches) {
-        return res.status(400).json({
-          success: false,
-          message: invalidCredentials
-        })
-      } else {
-        const tokenData = {
-          id : user.id
+  getUserByEmailPromise(email).then(
+    (user) => {
+      bcrypt.compare(password, user.password).then((matches) => {
+        if (!matches) {
+          return res.status(400).json({
+            success: false,
+            message: invalidCredentials,
+          });
+        } else {
+          const userId = user.id;
+          const jwtToken = generateToken(userId);
+          return res.status(200).json({
+            success: true,
+            token: jwtToken,
+          });
         }
-        const jwtToken = jwt.sign(tokenData, jwtTokenSecret, {expiresIn: '1m'})
-        return res.status(200).json({
-          success: true,
-          token: jwtToken
-        })
-      }
-    });
-  }, () => {
-    return res.status(400).json({
-      success: false,
-      message: invalidCredentials
-    })
-  })
-}
+      });
+    },
+    () => {
+      return res.status(400).json({
+        success: false,
+        message: invalidCredentials,
+      });
+    }
+  );
+};
 
 module.exports = {
   createUser,
-  loginUser
+  loginUser,
 };
