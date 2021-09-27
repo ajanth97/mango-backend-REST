@@ -2,7 +2,13 @@
   "name": "mango-backend",
   "version": "1.0.0",
   "description": "Mango hotels booking app",
+  "engines": {
+    "node": "14.x"
+  },
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "author": "Ajanth",
   "license": "MIT",
   "dependencies": {
