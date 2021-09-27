@@ -14,7 +14,12 @@ myAccount = (req, res) => {
 
   getUserByIdPromise(id).then(
     (user) => {
-      return res.status(200).json(user);
+      const accountData = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        memberSince: user.createdAt,
+      };
+      return res.status(200).json(accountData);
     },
     () => {
       //This is also not the user's fault
