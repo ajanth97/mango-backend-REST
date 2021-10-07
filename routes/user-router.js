@@ -41,6 +41,14 @@ router.post(
     }
     return true;
   }),
+  body("lastName").custom((value) => {
+    if (!isName(value)) {
+      throw new Error(
+        "Please enter a valid Last Name ! Only alphabetic characters and spaces are valid"
+      );
+    }
+    return true;
+  }),
   UserCtrl.createUser
 );
 
