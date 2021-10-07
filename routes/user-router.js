@@ -3,7 +3,8 @@ const { body } = require("express-validator");
 const router = express.Router();
 
 const UserCtrl = require("../controllers/user-ctrl");
-const {getUserByEmailPromise} = require("../utils/getUser");
+const { getUserByEmailPromise } = require("../utils/getUser");
+const isName = require("../utils/isName");
 
 router.post(
   "/signup",
@@ -13,7 +14,9 @@ router.post(
     .custom((value) => {
       return getUserByEmailPromise(value).then(
         () => {
-          return Promise.reject("User with this email already exists");
+          return Promise.reject(
+            "User with this email already exists. Please Login instead !"
+          );
         },
         () => {
           return Promise.resolve();
@@ -30,9 +33,17 @@ router.post(
     }
     return true;
   }),
+  body("firstName").custom((value) => {
+    if (!isName(value)) {
+      throw new Error(
+        "Please enter a valid First Name ! Only alphabetic characters and spaces are valid"
+      );
+    }
+    return true;
+  }),
   UserCtrl.createUser
 );
 
-router.post("/login", UserCtrl.loginUser)
+router.post("/login", UserCtrl.loginUser);
 
 module.exports = router;
