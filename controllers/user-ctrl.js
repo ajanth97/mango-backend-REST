@@ -9,7 +9,7 @@ createUser = (req, res) => {
   //check for errors before creating user
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors });
+    return res.status(400).json({ errors: errors.mapped() });
   }
   const body = req.body;
   const saltRounds = 10;
