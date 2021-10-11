@@ -5,6 +5,7 @@ const db = require("./db/db");
 const userRouter = require("./routes/user-router");
 const protectedRouter = require("./routes/protected-router");
 const { authenticateJWT } = require("./jwt/jwt");
+const { getHotels } = require("./controllers/hotel-ctrl");
 
 const app = express();
 
@@ -23,5 +24,7 @@ app.get("/", authenticateJWT, (req, res) => {
 
 app.use("/api", userRouter);
 app.use("/api/protected", authenticateJWT, protectedRouter);
+
+app.get("/api/hotels", getHotels);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
