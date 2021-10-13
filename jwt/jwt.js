@@ -6,9 +6,7 @@ const generateToken = (userId) => {
   const tokenData = {
     id: userId,
   };
-  console.log(tokenData);
   const jwtToken = jwt.sign(tokenData, jwtTokenSecret, { expiresIn: "1h" });
-  console.log(jwtToken);
   return jwtToken;
 };
 
