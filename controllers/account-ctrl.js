@@ -14,6 +14,7 @@ myAccount = (req, res) => {
   console.log(id);
   getUserByIdPromise(id).then(
     (user) => {
+      console.log(user.firstName);
       const accountData = {
         firstName: user.firstName,
         lastName: user.lastName,
