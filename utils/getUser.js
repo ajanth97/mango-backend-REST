@@ -22,6 +22,7 @@ const getUserByIdPromise = (id) =>
     User.findOne({ id: id })
       .then((user) => {
         if (user) {
+          console.log(user);
           console.log("User with id: " + id + " Exists !");
           onResolve(user);
         } else {
