@@ -19,7 +19,7 @@ const getUserByEmailPromise = (email) =>
 
 const getUserByIdPromise = (id) =>
   new Promise(function (onResolve, onReject) {
-    User.findOne({ id: id })
+    User.findOne({ _id: id })
       .then((user) => {
         if (user) {
           console.log(user);
