@@ -11,7 +11,7 @@ myAccount = (req, res) => {
       message: errorMessage,
     });
   }
-
+  console.log(id);
   getUserByIdPromise(id).then(
     (user) => {
       const accountData = {
